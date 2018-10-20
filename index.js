@@ -14,9 +14,12 @@ require('dotenv').config();
 
 app = express();
 
+
+app.set('secret', process.env.SECRET);
 app.use(favicon(__dirname + '/favicon/favicon.ico'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(morgan());
 
 // Allow CORS
 app.use(function(req, res, next) {
@@ -26,7 +29,8 @@ app.use(function(req, res, next) {
 });
 
 // Backend API routes
-require('./src/server/routes/api.js')(app);
+const apiRouter = require('./src/server/routes/api.js');
+app.use('/api', apiRouter);
 
 // Frontend endpoints
 app.use(express.static(__dirname + "/dist"));
@@ -41,13 +45,15 @@ app.listen(PORT);
 
 console.log(chalk.green("Started on port " + PORT));
 
+
 //  Connection to MongoDB
-const DATABAES = process.env.MONGODB_URI || config.dev.database;
+const DATABASE = process.env.MONGODB_URI || config.dev.database;
+
 
 mongoose.Promise = global.Promise;
-mongoose.connect(DATABAES, { useNewUrlParser: true })
+mongoose.connect(DATABASE, { useNewUrlParser: true })
 	.then(res => {
-		console.log(chalk.green('Connected to MongoDB: ' + DATABAES));
+		console.log(chalk.green('Connected to MongoDB: ' + DATABASE));
 	}).catch(err => {
 		console.log(chalk.red('Error connecting to MongoDB: ' + err));
 	}

@@ -5,7 +5,7 @@
     <link href="https://fonts.googleapis.com/css?family=Oxygen" rel="stylesheet">
     <!-- Use key to reload all components on route change -->
     <router-view :key="$route.fullPath" />
-    <notifications group="suggestionSubmission" />
+    <notifications classes="alert alert-danger mr-3" group="error" position="bottom right"/>
   </div>
 </template>
 

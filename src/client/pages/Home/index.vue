@@ -5,12 +5,19 @@
     </div>
 
     <div class="content">
-      <h1>SafeGuard</h1>
-      <div class="row">
+      <h1>DashBoard</h1>
+      <div class="row text-left">
         <div class="col-12 col-md-6">
 
         </div>
         <div class="col-12 col-md-6">
+          <small>Current event: </small>
+          <select class="custom-select" v-model="currentEvent">
+            <option selected :value="null">None</option>
+            <option v-for="event in events" :key="event._id" :value="event._id">{{event.name}}</option>
+          </select>
+
+          <button v-if="currentEvent" type="button" class="btn btn-success mt-3" @click="notifySoberDrivers">Notify Sober Drivers</button>
 
         </div>
       </div>
@@ -36,7 +43,8 @@ export default {
   data() {
     return {
       events: [],
-      me: {}
+      me: {},
+      currentEvent: ""
     };
   },
   methods: {
@@ -63,6 +71,22 @@ export default {
         })
         .then(res => {
           this.me = res.data;
+          this.currentEvent = this.me.currentEvent;
+        })
+        .catch(err => {
+          this.$notify({
+            group: "error",
+            text: err.response.data.message
+          });
+        });
+    },
+    notifySoberDrivers() {
+      axios
+        .post("/api/notifications/notifySober", {
+          token: this.$store.state.token
+        })
+        .then(res => {
+          
         })
         .catch(err => {
           this.$notify({
@@ -75,6 +99,24 @@ export default {
   mounted() {
     this.getEvents();
     this.myData();
+  },
+  watch: {
+    currentEvent() {
+      axios
+        .post("/api/user/setEvent", {
+          token: this.$store.state.token,
+          id: this.currentEvent !== null ? this.currentEvent : ""
+        })
+        .then(res => {
+          this.myData();
+        })
+        .catch(err => {
+          this.$notify({
+            group: "error",
+            text: err.response.data.message
+          });
+        });
+    }
   }
 };
 </script>

@@ -1,6 +1,7 @@
 const User = require('../models/User'),
   auth = require('../scripts/auth'),
-  geo = require('../scripts/geo');
+  geo = require('../scripts/geo'),
+  notifications = require('../scripts/notifications');
 
 const express = require("express"),
   router = express.Router(),
@@ -18,6 +19,32 @@ router.post('/get', (req, res) => {
       res.json(user.notifications);
     });
 
+});
+
+router.post('/notifySober', (req, res) => {
+  User.findById(req.decoded.id)
+    .populate({
+      path: "currentEvent",
+      populate: {
+        path: "soberGroup",
+        populate: {
+          path: "users"
+        }
+      }
+    })
+    .then((user) => {
+      if (!user.currentEvent) {
+        res.status(400);
+        res.json({message: "Event is not set"});
+        return;
+      }
+
+      console.log(user);
+
+      notifications.notifyGroups([user.currentEvent.soberGroup], user, "This user has requested your assistance.");
+
+      res.json({message: "ok"});
+    });
 });
 
 router.post('/registerFirebaseToken', (req, res) => {

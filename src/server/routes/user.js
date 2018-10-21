@@ -29,6 +29,26 @@ router.post('/getById', (req, res) => {
     });
 });
 
+router.post('/setEvent', (req, res) => {
+  if (req.body.id === undefined) {
+
+    res.status(400);
+    res.json({ 'message': 'Missing required fields' });
+    return;
+  }
+
+  User.findById(req.decoded.id)
+    .then((user) => {
+      if (req.body.id === "") {
+        user.currentEvent = null;
+      } else {
+        user.currentEvent = ObjectId(req.body.id);
+      }
+      user.save();
+      res.json({message: "ok"});
+    });
+});
+
 router.post('/getAll', (req, res) => {
 
   User.find({}, "fullname _id").lean().exec((err, users) => {

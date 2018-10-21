@@ -4,14 +4,15 @@
       <Topbar/>
     </div>
 
-    <div class="content">
-      <h1>SafeGuard</h1>
-      <div class="row">
-        <div class="col-12 col-md-6">
-
+    <div class="content m-5">
+      <h1>Notification Settings</h1>
+      <p class="text-info">Users listed here will be notified if you leave the event</p>
+      <div class="row d-flex justify-content-center">
+        <div v-if="loaded" class="col-12 col-md-4 text-left">
+          <EditGroupComponent :groupId="me.notificationGroups[0]"/>
         </div>
-        <div class="col-12 col-md-6">
-
+        <div v-if="!loaded" class="col-12 col-md-4">
+          <h1>Loading...</h1>
         </div>
       </div>
     </div>
@@ -26,36 +27,22 @@ import axios from "axios";
 
 import Topbar from "@/components/Topbar";
 import Bottombar from "@/components/Bottombar";
+import EditGroupComponent from "@/components/EditGroupComponent";
 
 export default {
-  name: "Home",
+  name: "NotificationSettings",
   components: {
     Topbar,
-    Bottombar
+    Bottombar,
+    EditGroupComponent
   },
   data() {
     return {
-      events: [],
-      me: {}
+      me: {},
+      loaded: false
     };
   },
   methods: {
-    getEvents() {
-      axios
-        .post("/api/event/getAll", {
-          token: this.$store.state.token
-        })
-        .then(res => {
-          this.events = res.data;
-          // this.loaded = true;
-        })
-        .catch(err => {
-          this.$notify({
-            group: "error",
-            text: err.response.data.message
-          });
-        });
-    },
     myData() {
       axios
         .post("/api/user/me", {
@@ -63,6 +50,7 @@ export default {
         })
         .then(res => {
           this.me = res.data;
+          this.loaded = true;
         })
         .catch(err => {
           this.$notify({
@@ -73,7 +61,6 @@ export default {
     }
   },
   mounted() {
-    this.getEvents();
     this.myData();
   }
 };
@@ -93,12 +80,12 @@ h2 {
   height: 10%;
   min-height: 75px;
 }
-.content {
+/* .content {
   margin-left: 10%;
   margin-right: 10%;
   margin-top: 30px;
   margin-bottom: 30px;
-}
+} */
 .bottombar-div {
   height: 25%;
   min-height: 187.5px;
@@ -112,5 +99,8 @@ h2 {
     width: calc(100% - 60px);
     border-radius: 4px 0px 0px 4px;
   }
+}
+form {
+  text-align: left;
 }
 </style>

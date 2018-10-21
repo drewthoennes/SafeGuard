@@ -102,4 +102,7 @@ h2 {
     border-radius: 4px 0px 0px 4px;
   }
 }
+form {
+  text-align: left;
+}
 </style>

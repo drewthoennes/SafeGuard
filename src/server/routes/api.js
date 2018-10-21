@@ -9,12 +9,16 @@ router.get('/', (req, res) => {
 
 const loginRouter = require('./login'),
   eventRouter = require('./event'),
-  trackRouter = require('./track');
-  notificationsRouter = require('./notifications');
+  trackRouter = require('./track'),
+  notificationsRouter = require('./notifications'),
+  userRouter = require('./user');
+  groupRouter = require('./group');
 
 router.use(loginRouter);
 router.use("/event", eventRouter);
 router.use("/track", trackRouter);
 router.use("/notifications", notificationsRouter);
+router.use("/user", userRouter);
+router.use("/group", groupRouter);
 
 module.exports = router;

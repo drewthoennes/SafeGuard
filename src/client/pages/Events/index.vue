@@ -4,14 +4,23 @@
       <Topbar/>
     </div>
 
-    <div class="content">
-      <h1>SafeGuard</h1>
-      <div class="row">
-        <div class="col-12 col-md-6">
-
+    <div class="content m-5">
+      <h1>All Events</h1>
+      <div class="row d-flex justify-content-center">
+        <div v-if="loaded" class="col-12 col-md-4 text-left">
+          <ul class="list-group">
+            <router-link class="list-group-item list-group-item-action flex-column align-items-start" 
+              v-for="event in events" :key="event._id" :to="{name: 'ViewEvent', params: {id: event._id}}">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">{{event.name}}</h5>
+                <small>{{event.totalUsers}} going</small>
+              </div>
+              <p class="mb-1">{{event.description}}</p>
+            </router-link>
+          </ul>
         </div>
-        <div class="col-12 col-md-6">
-
+        <div v-if="!loaded" class="col-12 col-md-4">
+          <h1>Loading...</h1>
         </div>
       </div>
     </div>
@@ -28,7 +37,7 @@ import Topbar from "@/components/Topbar";
 import Bottombar from "@/components/Bottombar";
 
 export default {
-  name: "Home",
+  name: "Events",
   components: {
     Topbar,
     Bottombar
@@ -36,7 +45,7 @@ export default {
   data() {
     return {
       events: [],
-      me: {}
+      loaded: false
     };
   },
   methods: {
@@ -45,24 +54,9 @@ export default {
         .post("/api/event/getAll", {
           token: this.$store.state.token
         })
-        .then(res => {
+        .then((res) => {
           this.events = res.data;
-          // this.loaded = true;
-        })
-        .catch(err => {
-          this.$notify({
-            group: "error",
-            text: err.response.data.message
-          });
-        });
-    },
-    myData() {
-      axios
-        .post("/api/user/me", {
-          token: this.$store.state.token
-        })
-        .then(res => {
-          this.me = res.data;
+          this.loaded = true;
         })
         .catch(err => {
           this.$notify({
@@ -74,7 +68,6 @@ export default {
   },
   mounted() {
     this.getEvents();
-    this.myData();
   }
 };
 </script>
@@ -93,12 +86,12 @@ h2 {
   height: 10%;
   min-height: 75px;
 }
-.content {
+/* .content {
   margin-left: 10%;
   margin-right: 10%;
   margin-top: 30px;
   margin-bottom: 30px;
-}
+} */
 .bottombar-div {
   height: 25%;
   min-height: 187.5px;
@@ -112,5 +105,8 @@ h2 {
     width: calc(100% - 60px);
     border-radius: 4px 0px 0px 4px;
   }
+}
+form {
+  text-align: left;
 }
 </style>

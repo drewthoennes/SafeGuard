@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Group = require('../models/Group');
 const auth = require('../scripts/auth');
 
 const express = require("express"),
@@ -32,11 +33,15 @@ router.post('/register', (req, res) => {
       return;
     }
 
+    let notificationGroup = Group({ users: [], type: 'notification' });
+    notificationGroup.save();
+
     User({
       fullname: req.body.fullname,
       username: req.body.username,
       password: req.body.password,
-      phoneNumber: req.body.phoneNumber
+      phoneNumber: req.body.phoneNumber,
+      notificationGroups: [notificationGroup._id]
     }).save((err, user) => {
       if (err) {
         res.status(400);

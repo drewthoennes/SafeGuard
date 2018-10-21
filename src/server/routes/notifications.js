@@ -20,4 +20,20 @@ router.post('/get', (req, res) => {
 
 });
 
+router.post('/registerFirebaseToken', (req, res) => {
+  if (!req.body.firebaseToken) {
+
+    res.status(400);
+    res.json({ 'message': 'Missing required fields' });
+    return;
+  }
+
+
+  User.findById(req.decoded.id).then((user) => {
+    user.firebaseToken = req.body.firebaseToken;
+    res.json({ message: "ok" });
+  });
+
+});
+
 module.exports = router;

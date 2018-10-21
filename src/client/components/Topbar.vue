@@ -2,7 +2,7 @@
   <div class="topbar" v-bind:class="{ absolute: absolute, noborder: !border, expanded: !accordionOpen }">
     <div class="topbar-row">
       <div class="title">
-        <router-link :to="{name: 'Home'}">Backseat</router-link>
+        <router-link :to="{name: 'Home'}">SafeGuard</router-link>
       </div>
       <div class="information" v-if="!hide">
         <div>
@@ -10,6 +10,15 @@
         </div>
         <div>
           <router-link v-if="!$store.state.logged" :to="{name: 'Registration'}">Registration</router-link>
+        </div>
+        <div>
+          <router-link v-if="$store.state.logged" :to="{name: 'CreateEvent'}">Create an Event</router-link>
+        </div>
+        <div>
+          <router-link v-if="$store.state.logged" :to="{name: 'Events'}">All Events</router-link>
+        </div>
+        <div>
+          <router-link v-if="$store.state.logged" :to="{name: 'NotificationSettings'}">Notification Settings</router-link>
         </div>
       </div>
       <div class="accordian" v-if="!hide">
@@ -23,6 +32,15 @@
       </div>
       <div>
         <router-link v-if="!$store.state.logged" :to="{name: 'Registration'}">Registration</router-link>
+      </div>
+      <div>
+        <router-link v-if="$store.state.logged" :to="{name: 'CreateEvent'}">Create an Event</router-link>
+      </div>
+      <div>
+        <router-link v-if="$store.state.logged" :to="{name: 'Events'}">All Events</router-link>
+      </div>
+      <div>
+        <router-link v-if="$store.state.logged" :to="{name: 'NotificationSettings'}">Notification Settings</router-link>
       </div>
     </div>
   </div>

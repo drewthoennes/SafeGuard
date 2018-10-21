@@ -8,7 +8,7 @@ const store = new Vuex.Store({
     // logged: false,
     // token: ""
     logged: true,
-    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVsbmFyZHUyIiwiaWQiOiI1YmNiOGE0Nzk1ZTliYjIwZjUwNDUwZjMiLCJpYXQiOjE1NDAwNjU4NjMsImV4cCI6MTU0MDE1MjI2M30.CHkrNrlqPL7cQdj2CJrdBX0eqKMUeoR1QwsmgJwzu4U"
+    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImVsbmFyZHUiLCJpZCI6IjViY2MyYTkyNWI4YzIyYjE2YmIzYzc5NyIsImlhdCI6MTU0MDEwNjg5OCwiZXhwIjoxNTQwMTkzMjk4fQ.-Wcp0VHcVFDTAHEBjkg_xPlmRd3TO4teYNsvKEa0h9E"
   },
   mutations: {
     login(state, token) {

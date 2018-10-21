@@ -22,9 +22,9 @@ router.post('/create', (req, res) => {
     return;
   }
 
-  let adminGroup = Group({users: [req.decoded._id]}),
-    userGroup = Group({users: [req.decoded._id]}),
-    soberGroup = Group({users: [req.decoded._id]});
+  let adminGroup = Group({ users: [req.decoded._id], type: "admin"}),
+    userGroup = Group({ users: [req.decoded._id] }),
+    soberGroup = Group({ users: [req.decoded._id], type: "sober"});
 
   adminGroup.save();
   userGroup.save();
@@ -32,8 +32,8 @@ router.post('/create', (req, res) => {
 
   Event({
     name: req.body.name,
-    fromDate: new Date(req.body.fromDate * 1000),
-    toDate: new Date(req.body.toDate * 1000),
+    fromDate: new Date(req.body.fromDate),
+    toDate: new Date(req.body.toDate),
     description: req.body.description,
     location: {
       type: "Point",
@@ -47,7 +47,7 @@ router.post('/create', (req, res) => {
   }).save((err, event) => {
     if (err) {
       res.status(400);
-      res.json({'message': err});
+      res.json({ 'message': err });
       return;
     }
 
@@ -102,8 +102,15 @@ router.post('/getById', (req, res) => {
 
       if (event === null) {
         res.status(404);
-        res.json({message: "Not found"});
+        res.json({ message: "Not found" });
         return;
+      }
+
+      event.admin = false;
+      for (var admin of event.adminGroup.users) {
+        if (admin._id.toString() === req.decoded.id) {
+          event.admin = true;
+        }
       }
 
       res.json(event);
@@ -112,7 +119,21 @@ router.post('/getById', (req, res) => {
 
 router.post('/getAll', (req, res) => {
 
-  Event.find({}, "name description _id")
+  Event.find({}, "name description _id fromDate toDate location")
+    .populate({
+      path: "userGroup",
+      populate: {
+        path: "users",
+        select: "_id"
+      }
+    })
+    .populate({
+      path: "soberGroup",
+      populate: {
+        path: "users",
+        select: "_id"
+      }
+    })
     .lean().exec((err, events) => {
       if (err) {
         res.status(400);
@@ -122,8 +143,15 @@ router.post('/getAll', (req, res) => {
 
       if (events === null) {
         res.status(404);
-        res.json({message: "Not found"});
+        res.json({ message: "Not found" });
         return;
+      }
+
+      for (var event of events) {
+        event.totalUsers = event.userGroup.users.length;
+        event.totalSobers = event.soberGroup.users.length;
+        delete event.userGroup;
+        delete event.soberGroup;
       }
 
       res.json(events);

@@ -1,16 +1,16 @@
 <template>
   <div class="bottombar" v-bind:class="{ absolute: absolute }">
     <div class="title">
-      <h2>Backseat</h2>
+      <h2>SafeGuard</h2>
       <div class="icons">
         <a class="icon-left" href=""><i class="fab fa-github"></i></a>
         <a class="icon-right" href=""><i class="fas fa-bug"></i></a>
       </div>
     </div>
     <div class="information" v-if="!hide">
-      <router-link :to="{name: 'Home'}">Home</router-link>
+      <!-- <router-link :to="{name: 'Home'}">Home</router-link>
       <router-link :to="{name: 'About'}">About</router-link>
-      <router-link :to="{name: 'Documentation'}">Documentation</router-link>
+      <router-link :to="{name: 'Documentation'}">Documentation</router-link> -->
     </div>
   </div>
 </template>

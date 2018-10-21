@@ -29,6 +29,7 @@ var UserSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Group'
   }],
+  firebaseToken: String,
   tracking: {
     type: Boolean,
     default: false,
